@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="fr">
+  <%- include('partials/head', { title: title }) %>
+  <link rel="stylesheet" href="/stylesheets/chat.css">
+  <% include partials/header %>
+  <body>
+    <main>
+      <div class="chat-container">
+        <h1><%= title %></h1>
+        <div class="chat-header">
+          <label for="pseudo">Pseudo:</label>
+          <input id="pseudo" placeholder="Votre pseudo" />
+          <label for="room">Salon:</label>
+          <select id="room">
+            <option value="générale" selected>générale</option>
+            <option value="room1">room1</option>
+            <option value="room2">room2</option>
+          </select>
+          <button id="join">Rejoindre</button>
+        </div>
+        <div class="chat-messages">
+          <ul id="messages"></ul>
+        </div>
+        <form id="form" action="">
+          <input id="input" autocomplete="off" placeholder="Tapez votre message..." />
+          <button type="submit">Envoyer</button>
+        </form>
+      </div>
+    </main>
+  </body>
+  <% include partials/footer %>
+  
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    let counter = 0;
+    let pseudo = '';
+
+    const socket = io({
+      auth: {
+        serverOffset: 0,
+        room: 'générale'
+      },
+      ackTimeout: 10000,
+      retries: 3,
+    });
+
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+    const messages = document.getElementById('messages');
+    const pseudoInput = document.getElementById('pseudo');
+    const roomSelect = document.getElementById('room');
+    const joinBtn = document.getElementById('join');
+
+    joinBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      pseudo = (pseudoInput.value || '').trim();
+      const room = roomSelect.value || 'générale';
+      messages.innerHTML = '';
+      socket.emit('join room', room);
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (input.value) {
+        const clientOffset = `${socket.id}-${counter++}`;
+        socket.emit('chat message', input.value, clientOffset, pseudo || 'Anonyme');
+        input.value = '';
+      }
+    });
+
+    socket.on('chat message', (msg, serverOffset, username, isoDate) => {
+      const item = document.createElement('li');
+      
+      const left = document.createElement('div');
+      left.style.display = 'flex';
+      left.style.alignItems = 'center';
+      
+      const name = document.createElement('span');
+      name.className = 'pseudo' + ((username || '') === (pseudo || '') ? ' me' : '');
+      name.textContent = (username || 'Anonyme') + ': ';
+      
+      const content = document.createElement('span');
+      content.textContent = msg;
+      
+      left.appendChild(name);
+      left.appendChild(content);
+      
+      const date = document.createElement('span');
+      date.className = 'message-time';
+      const d = isoDate ? new Date(isoDate) : new Date();
+      date.textContent = d.toLocaleString();
+      
+      item.appendChild(left);
+      item.appendChild(date);
+      messages.appendChild(item);
+      
+      const chatMessages = document.querySelector('.chat-messages');
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      
+      socket.auth.serverOffset = serverOffset;
+    });
+  </script>
+</html>

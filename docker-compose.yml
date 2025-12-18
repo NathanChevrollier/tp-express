@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  web:
+    image: yourdockerhubuser/tp-express:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - /srv/tp-express/chat.db:/usr/src/app/chat.db
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+    restart: unless-stopped

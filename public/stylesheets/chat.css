@@ -1,0 +1,147 @@
+/* Chat WebSocket Styles */
+
+body { 
+  margin: 0; 
+  padding-bottom: 3rem; 
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+}
+
+.chat-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.chat-header {
+  background: #f7f7f7;
+  padding: 1rem;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.chat-header label {
+  font-weight: bold;
+}
+
+.chat-header input,
+.chat-header select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.chat-header input {
+  max-width: 200px;
+}
+
+.chat-header button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.chat-header button:hover {
+  background: #0056b3;
+}
+
+.chat-messages {
+  background: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  height: 500px;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+#messages { 
+  list-style-type: none; 
+  margin: 0; 
+  padding: 0; 
+}
+
+#messages > li { 
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  background: #f9f9f9;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#messages > li:nth-child(odd) { 
+  background: #efefef; 
+}
+
+.pseudo {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.pseudo.me {
+  color: #d63031;
+}
+
+.message-time {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+#form { 
+  background: rgba(0, 0, 0, 0.15); 
+  padding: 0.5rem; 
+  display: flex; 
+  gap: 0.5rem;
+  border-radius: 0 0 8px 8px;
+  box-sizing: border-box; 
+  backdrop-filter: blur(10px); 
+}
+
+#input { 
+  border: 1px solid #ddd; 
+  padding: 0.75rem 1rem; 
+  flex-grow: 1; 
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+#input:focus { 
+  outline: none; 
+  border-color: #007bff;
+}
+
+#form > button { 
+  background: #28a745; 
+  border: none; 
+  padding: 0.75rem 1.5rem; 
+  border-radius: 4px; 
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+#form > button:hover {
+  background: #218838;
+}
+
+main {
+  padding: 0;
+}

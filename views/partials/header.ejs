@@ -1,0 +1,22 @@
+<header>
+    <nav class="nav">
+        <a class="brand" href="/">TP Express</a>
+        <ul class="menu">
+        <li><a href="/">Accueil</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/chat">Chat</a></li>
+        <li><a href="/download">Télécharger un fichier</a></li>
+        <li><a href="/dab/888.88">DAB (ex: 888.88)</a></li>
+        <li><a href="/show-404">Voir 404</a></li>
+        </ul>
+        <div class="auth">
+        <% if (user) { %>
+            <span class="user">Bienvenue <strong><%= user %></strong></span>
+            <a class="btn" href="/logout">Déconnexion</a>
+        <% } else { %>
+            <a class="btn" href="/login">Se connecter</a>
+        <% } %>
+        </div>
+    </nav>
+</header>

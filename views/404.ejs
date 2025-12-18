@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="fr">
+  <%- include('partials/head', { title: 'Page non trouvée' }) %>
+  <% include partials/header %>
+  <body>
+    <main>
+      <section class="center">
+        <h1>404 — Page non trouvée</h1>
+        <p>Nous n'avons pas trouvé: <code><%= url %></code></p>
+        <p><a href="/">Retour à l'accueil</a></p>
+      </section>
+    </main>
+  </body>
+  <% include partials/footer %>
+</html>

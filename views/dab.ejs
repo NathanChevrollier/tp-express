@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fr">
+  <%- include('partials/head', { title: title }) %>
+  <% include partials/header %>
+  <body>
+    
+    <main>
+      <h1>DAB</h1>
+
+      <form method="get" action="/dab" class="form">
+        <label>Montant (ex: 888.88 €)
+          <input type="text" name="amount" value="<%= amount ? amount : '' %>">
+        </label>
+        <button type="submit">Calculer</button>
+      </form>
+
+      <% if (result && result.error === 'invalid') { %>
+        <p class="error">Montant invalide, utilisez un nombre (ex: 888.88 €).</p>
+
+      <% } else if (result && result.totalNotes !== undefined) { %>
+        <p>Total billets/pièces: <strong><%= result.totalNotes %></strong></p>
+        <ul>
+          <% result.breakdown.forEach(function(b){ %>
+            <li><%= b.label %> : <%= b.count %></li>
+          <% }); %>
+        </ul>
+
+        <% if (result.remainingCents && result.remainingCents > 0) { %>
+          <p>Reste non distribué: <%= (result.remainingCents/100).toFixed(2).replace('.', ',') %> €</p>
+        <% } %>
+        
+      <% } else { %>
+        <p>Saisissez un montant dans le formulaire ci‑dessus, ou visitez <code>/dab/888.88</code>.</p>
+      <% } %>
+    </main>
+  </body>
+  <% include partials/footer %>
+</html>

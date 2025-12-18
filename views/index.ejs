@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="fr">
+  <%- include('partials/head', { title: title }) %>
+  <% include partials/header %>
+  <body>
+    <main>
+      <section class="hero">
+        <h1><%= title %></h1>
+        <% if (user) { %>
+          <p class="welcome">Bienvenue <strong><%= user %></strong></p>
+        <% } else { %>
+          <p class="welcome">Vous n'êtes pas connecté.</p>
+        <% } %>
+        <p>TP serveur web en express</p>
+      </section>
+    </main>
+  </body>
+  <% include partials/footer %>
+</html>
