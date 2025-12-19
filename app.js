@@ -4,10 +4,12 @@ import path from 'path';
 import morgan from 'morgan';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
+import methodOverride from 'method-override';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
+import userApiRouter from './routes/api/users.js';
 
 import indexRouter from './routes/index.js';
 import { initializeWebSocket } from './lib/socket.js';
@@ -26,6 +28,13 @@ app.set('view engine', 'ejs');
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(methodOverride(function (req, res) {
+  if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+    const method = req.body._method;
+    delete req.body._method;
+    return method;
+  }
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -44,6 +53,9 @@ app.use(function(req, res, next) {
 });
 
 app.use('/', indexRouter);
+
+// API routes (users)
+app.use('/api/users', userApiRouter);
 
 // catch 404 and forward to error handler (custom 404 page)
 app.use(function(req, res, next) {

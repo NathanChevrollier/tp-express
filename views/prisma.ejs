@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <%- include('partials/head', { title: title }) %>
+  <%- include('partials/header') %>
+  <body>
+    <main>
+        <div class="container">
+        <h1><%= title %></h1>
+        <% if (ok) { %>
+            <p style="color:green">Connexion à la base de données OK.</p>
+            <p>Nombre d'utilisateurs: <%= count %></p>
+        <% } else { %>
+            <p style="color:red">Échec de la connexion à la base de données.</p>
+            <pre><%= error %></pre>
+        <% } %>
+        <button onclick="window.location.href='/'" class="btn">Retour</button>
+        </div>
+    </main>
+  </body>
+    <%- include('partials/footer') %>
+</html>

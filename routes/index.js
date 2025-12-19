@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { getMinBills } from '../lib/dab.js';
+import * as userService from '../lib/userService.js';
 const router = express.Router();
 
 const ensureAdmin = (req, res, next) => {
@@ -30,18 +31,6 @@ router.get('/chat', function(req, res) {
 
 router.get('/login', (req, res) => {
   res.render('login', { title: 'Login', error: null });
-});
-
-router.post('/login', (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-
-  if (username === 'admin' && password === 'admin') {
-    req.session.user = 'admin';
-    return res.redirect('/');
-  }
-
-  res.render('login', { title: 'Login', error: 'Identifiants invalides' });
 });
 
 router.get('/logout', (req, res) => {
@@ -92,11 +81,11 @@ router.get('/dab', function(req, res) {
     var result = getMinBills(req.query.amount);
     return res.render('dab', { title: 'DAB', amount: req.query.amount, result: result });
   }
-  // no amount provided -> show empty form
+  // no amount show empty form
   res.render('dab', { title: 'DAB', amount: null, result: null });
 });
 
-// DAB dynamic route
+// DAB dynamic
 router.get('/dab/:amount', function(req, res) {
   var param = req.params.amount;
   var result = getMinBills(param);
@@ -106,6 +95,58 @@ router.get('/dab/:amount', function(req, res) {
 // 404
 router.get('/show-404', function(req, res){
   res.redirect('/this-page-does-not-exist');
+});
+
+router.get('/prisma-check', async (req, res) => {
+  res.redirect('/api/users/prisma-check');
+});
+
+// Users management page
+router.get('/users', async (req, res) => {
+  try {
+    const users = await userService.listUsers();
+    let editUser = null;
+    
+    // If edit query param is present, fetch that user
+    if (req.query.edit) {
+      const id = Number(req.query.edit);
+      if (Number.isInteger(id) && id > 0) {
+        editUser = await userService.getUserById(id);
+      }
+    }
+    
+    res.render('user', { 
+      title: 'Gestion des utilisateurs', 
+      users, 
+      editUser 
+    });
+  } catch (error) {
+    console.error('Error loading users page:', error);
+    res.status(500).render('error', { 
+      message: 'Erreur lors du chargement des utilisateurs', 
+      error: error 
+    });
+  }
+});
+
+router.post('/login', async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  if (!username || !password) {
+    return res.render('login', { title: 'Login', error: 'Champs manquants' });
+  }
+
+  try {
+    // admin en dur
+    if (username === 'admin' && password === 'admin') {
+      req.session.user = 'admin';
+      return res.redirect('/');
+    }
+} catch (error) {
+    console.error('Prisma error:', error);
+    return res.render('login', { title: 'Login', error: 'Erreur lors de la connexion' });
+  }
 });
 
 export default router;
